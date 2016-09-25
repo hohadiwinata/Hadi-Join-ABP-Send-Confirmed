@@ -1,0 +1,40 @@
+{"conditions": {"temperature": {"gt": 100}}}
+
+{
+	{"start": 2016-09-04T00:00:00.000Z},
+	{"end": 2016-09-06T00:00:00.000Z},
+	{"streams":"temperature"},
+	{"conditions": {"temperature": {"gt": 100}}}
+}
+
+{{"start": 2016-09-04T00:00:00.000Z},{"end": 2016-09-06T00:00:00.000Z},{"streams":"temperature"},{"conditions": {"temperature": {"gt": 100}}}
+}
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -d '{"start": 2016-09-04T00:00:00.000Z}, {"end": 2016-09-06T00:00:00.000Z}, {"streams":["temperature"]}, {"conditions": {"temperature": {"gt": 100}}}}' -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e"
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -d '{query:{"start": 2016-09-04T00:00:00.000Z}, {"end": 2016-09-06T00:00:00.000Z}, {"streams":"temperature"}, {"conditions": {"temperature": {"gt": 100}}}}' -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e"
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -H "Content-Type: application/json" -d '{{"start": 2016-09-04T00:00:00.000Z},{"end": 2016-09-06T00:00:00.000Z},{"streams":"temperature"},{"conditions": {"temperature": {"gt": 100}}}
+}' -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e"  
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -H "Content-Type: application/json" -d '{"start": 2016-09-04T00:00:00.000Z},{"end": 2016-09-06T00:00:00.000Z},{"streams":["temperature"]},{"conditions": {"temperature": {"gt": 100}}}' -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e"  
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -H "Content-Type: application/json" -d '{params:{{"start": 2016-09-04T00:00:00.000Z},{"end": 2016-09-06T00:00:00.000Z},{"streams":["temperature"]},{"conditions": {"temperature": {"gt": 100}}}}}' -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search -H "Content-Type: application/json" -d '{"Company": "Connectome"}' {"start": 2016-09-04T00:00:00.000Z},{"end":2016-09-06T00:00:00.000Z},{"streams":["temperature"]},{"conditions": {"temperature": {"gt": 100}}}} -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?start=2016-09-04T00:00:00.000Z&end=2016-09-05T00:00:00.000Z" -d'{"conditions": {"temperature": {"gt": 100}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?start=2016-09-04T00:00:00.000Z&end=2016-09-05T00:00:00.000Z" -d'{"streams":["temperature"]}' -d'{"conditions": {"gt": 100}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?start=2016-09-04T00:00:00.000Z&end=2016-09-05T00:00:00.000Z" -d'{"streams":["temperature"]}' -d'{"conditions": {"temperature": {"gt": 100}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?start=2016-09-02T00:00:00.000Z&end=2016-09-06T00:00:00.000Z&pretty" -d'{"streams":["temperature"],"conditions": {"temperature": {"gt": 100}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?start=2016-09-02T00:00:00.000Z&end=2016-09-06T00:00:00.000Z&pretty" -d'{"streams":["temperature"],"conditions": {"temperature": {"gt": 50}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+--M2X API General Search Format (Within 24 hours)--
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?pretty" -d'{"start":"2016-09-04T00:00:00.000Z", "end":"2016-09-05T00:00:00.000Z","streams":["temperature"],"conditions": {"temperature": {"gt": 50}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 
+
+--M2X GET API Time Search Format--
+curl -i "http://api-m2x.att.com/v2/devices/d52d59959e16b1ff88cce385bf017688/values/search?pretty" -d'{"start":"2016-09-03T10:00:00.000Z", "end":"2016-09-04T10:00:00.000Z","streams":["temperature"],"conditions": {"temperature": {"gt": 50}}}' -H "Content-Type: application/json"  -H "X-M2X-KEY: 7fddc362a4967fcd1f497d35fd7f438e" 

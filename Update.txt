@@ -1,0 +1,188 @@
+Microchip Forum
+http://www.microchip.com/forums/m941400.aspx
+
+[21-AUG-16 17:58] Update WaspUART.cpp #define UART_DEBUG 2
+[21-AUG-16 20:01] Change WaspUART class
+
+WaspUART.cpp
+WaspUART::SendCommand
+	parseString(_data, 10, "/r/n");
+	USB.print(F("Buffer: ")); USB.println(readBuffer(8));
+
+WaspUART.h
+	Change UART_DEBUG 2
+	addition in line 83-> char        _data [20];
+
+
+[21-AUG-16 23:59] Add getfrequency
+---------------------------------------------
+REVISION 4
+[22-AUG-16 00:15] 
+SET SF12 to SF10
+SET RADIO POWER 10
+SET RETRIES 4
+SET 868100000 to 868000000
+
+[22-AUG-16 01:54]
+MODIFY WASPLORAWAN.CPP - JOINABP()
+
+[22-AUG-16 05:00]
+MODIFY Waitfor() add parsestring()
+
+Revision 5 To do
+-----------------
+1. Remove joinabp() from the loop
+2. How prevent the RN2483 from sleeping?
+3. delay from sendcommand() to waitfor()
+4. Try sending using radiotx <- P2P is it?
+5. How to test whether serial port is really sending any data?
+6. Do we need to set rx2 and rxdelay1?
+7. What is the ACK from conduit like?
+8. How to set conduit to send back ACK at differnt port?
+
+
+REVISION 5
+-----------
+[22-AUG-16 10:33] Set delay of 1000 from  sendcomannd to waitfor in sendconfirmed method
+
+[22-AUG-16 11:00] 
+use SetPower instead of SetRadioPower
+use setDataRate instead of SetRadioSF
+
+[22-AUG-16 11:23PM]
+bring LoRaWAN.ON outside the loop()
+
+[22-AUG-16 11:37PM]
+Change WaspLoRaWAN.cpp waitfor method from 4 expected Answer to only 1 expected Answer
+
+[23-AUG-16 02:06PM]
+Remove RTC from main program
+
+[23-AUG-16 06:51PM] 
+Tested just 1 level deep that WaspLoRaWAN can issue error if command is not good. Change back to normal.
+
+[23-AUG-16 07:16PM]
+Change Baudrate in WaspUART.h to 57600 <- Baudrate is already correct
+
+[23-AUG-16 10:16PM]
+Add UART_DEBUG in WaspLoraWAN.h and .cpp
+in WaspUART.cpp in sendcommand method add
+ 	USB.print(F("[debug] UART Socket:")); USB.printHex(_uart);
+
+
+[24-AUG-16 06:35PM]
+Add debug in WaspLoRaWAN.cpp parseintvalue method
+
+-----------------------------------------------------------
+Revision 6
+
+To do:
+1. Delay time from LoRaWAN.ON to JoinABP to SendConfirmed
+2. Delay from mac send tx payload --to-- /r/n
+
+[24-AUG-16 07:05PM]
+Set RX1 Delay added
+
+[24-AUG-16 07:05PM]
+1. Removed Checking payload is a hexadecimal string in sendconfirmed payload
+2. sendconfirmed waitfor change to only 1 respond
+3. Insert delay in WaspUART.cpp in the waitfor method inside while loop
+
+[24-AUG-16 12:35AM]
+1. Set app key
+
+[24-AUG-16 09:35PM]
+1.Play around with OTA
+2.Set Lora Network Server To public and Network ID to EUI and Network Key to key
+3.Change WaspLoraWAN.cpp joinOTAA method waitfor function input to timeout 20000 -> 3000
+4. Change timeout to 30,000
+5. Add delay in between On, JoinOTAA etc
+
+[24-AUG-16 11:35PM]
+1. So happy today I am able to get all the reading from waspmote
+2. Take out antenna
+3. Configure App-key as usual in conduit for registration of node
+4. Configure P&S to have its own App-key by setting it thorugh LoRaWAN.SetAppKey 
+5. WaspLoRaWAN and WaspUART copy has been made
+6. Change Lora Network Server to public and Network ID EUI to 11.12.13.14 blah
+7. Change Network Key too (actually i have already mentioned it previously but who knows)
+
+----------------------------------------------------------------------------
+Revision 7
+
+To do: 
+1. Verify whether App-key is really needed if not MIC error will fire
+2. Verifiy is it because now it is set to public network (This seems to be it)
+3. Now we want to find out why exactly the acknowledge is not responding
+4. Delay from mac send tx payload --to-- /r/n
+
+[26-AUG-16 17:05PM]
+1. Edit lora-network-server.conf
+      log:{
+	    xxxxxx,
+	    "path":"" to "path":"/var/log/lora-network-server.log",
+	    xxxxx
+	  }
+
+[26-AUG-16 18:45PM]
+Set RX2 data rate and frequency to 869,100,000 and DataRate to 5
+Set RX1 Delay Window to 2000 ms (2 seconds)
+
+[26-AUG-16 12:35PM]
+
+1.WaspUART.cpp waitfor method add
+            #if UART_DEBUG > 1
+                USB.print(F("[debug] _buffer:"));
+                USB.println( _buffer, _length);
+            #endif
+
+2.WaspLoRaWAN.cpp sendconfirmed method break apart mac tx cnf [payload] and /r and /n and add delay for each of these
+
+3.WaspLoRaWAN.cpp sendconfirmed method. The easiest way is actually just to add a delay of 5000 after mac tx cnf <port> <data> sendcommand function. What is happening is actually to give time for base station to respond. Of course I could play around with RX1Delay to set how fast I want to send my packet back
+
+----------------------------------------------------------------------------
+Revision 8
+
+Todo:
+1. I want to find out what is actually causing the serial not to get data. Where is the breaking point?
+
+[27-AUG-16 06:24PM]
+1. Tested with revision 8 but it does not seems to work again.
+
+[27-AUG-16 07:15PM]
+1. Set retries to 2
+
+[27-AUG-16 23:29PM]
+I dont know what I did but it sort of work again. This time I have saved all the necessary file that is needed to make it to work. This include WaspLoRaWAN.cpp/.h and WaspUART.cpp/.h in revision 7 folder.
+
+I have verified that even though I setup conduit not to return mac_rx ACK, P&S still is able to read the ACK message
+
+Now there is several things that could cause the UART not receiving again. The following is a list that I can think of (even the crazy one):
+
+1. mac tx cnf [port] [data] in WaspLoRaWAN.cpp need to be broken apart
+2. Conduit or Libelium need to warm up
+3. The delay of 0.5 sec might be affecting it
+4. The ACK function need to return mac_rx 1 AC instead of only AC or ACAF
+5. Conduit has been restarted
+6. Lease time expired
+7. Conduit need to be logged out and log in again in for the whole shebang to be reset to initial state. This means that Conduit has still not synced with P&S. I happen to stumble upon "authorization" / "sync" and conduit is like sending 4 packet of downlink command, but I did not manage to crack it.
+
+?8?/?28?/?2016? ?5?:?27?:?22? ?PM[7bea2250.cad74c]lora/00-11-22-33-44-55-66-77/packet_sent : [msg.payload] : string{"codr":"4/5","data":"YCFDZYcwGgEDbKQOA4Mu","datr":"SF10BW125","freq":869.52499999999998,"ipol":true,"modu":"LORA","ncrc":false,"powe":10,"rfch":0,"size":15,"tmst":310889683} 
+?8?/?28?/?2016? ?5?:?27?:?27? ?PM[7bea2250.cad74c]lora/00-11-22-33-44-55-66-77/packet_sent : [msg.payload] : string{"codr":"4/5","data":"YCFDZYcgGwEDsVzEEaAx","datr":"SF10BW125","freq":869.52499999999998,"ipol":true,"modu":"LORA","ncrc":false,"powe":10,"rfch":0,"size":15,"tmst":315150187} 
+?8?/?28?/?2016? ?5?:?27?:?31? ?PM[7bea2250.cad74c]lora/00-11-22-33-44-55-66-77/packet_sent : [msg.payload] : string{"codr":"4/5","data":"YCFDZYcgHAF5f6+K","datr":"SF10BW125","freq":869.52499999999998,"ipol":true,"modu":"LORA","ncrc":false,"powe":10,"rfch":0,"size":12,"tmst":319482572} 
+?8?/?28?/?2016? ?5?:?27?:?35? ?PM[7bea2250.cad74c]lora/00-11-22-33-44-55-66-77/packet_sent : [msg.payload] : string{"codr":"4/5","data":"YCFDZYcgHQGKyvL1","datr":"SF10BW125","freq":869.52499999999998,"ipol":true,"modu":"LORA","ncrc":false,"powe":10,"rfch":0,"size":12,"tmst":323815284}
+
+
+[27-AUG-16 23:59PM]
+I have tried restarting the conduit while P&S is in off state and when conduit has finished loading its thing, I powered up P&S. It just works to receive the UART command.
+
+[28-AUG-16 09:43PM]
+Keep track of ACK by introducing another boolean variable
+
+[28-AUG-16 09:53PM]
+Keep track of the Frame counter
+
+--------------------------------------------------------------------
+Revision 9
+
+

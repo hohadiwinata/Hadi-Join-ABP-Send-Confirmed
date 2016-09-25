@@ -1,0 +1,56 @@
+Query
+------
+
+Sort by ID
+----------
+{
+  "selector": {
+    "_id": {
+      "$gt": 0
+    },
+    "payload.TEMPERATURE":{
+        "$gt": 15
+    }
+  },
+  "fields": [
+      "payload"
+  ],
+  "sort": [
+    {
+      "_id": "asc"
+    }
+  ]
+}
+
+Sort by desc time 
+------------------
+{
+  "selector": {
+    "time": {
+      "$gt": 0
+    }
+  },
+  "fields": [
+   "payload",
+   "time"
+  ],
+  "sort": [
+    {
+      "time": "desc"
+    }
+  ]
+}
+
+Index
+------
+
+{
+ "type": "json",
+ "def": {
+  "fields": [
+   {
+    "time": "desc"
+   }
+  ]
+ }
+}
